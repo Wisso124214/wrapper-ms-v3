@@ -1,0 +1,6 @@
+{
+  "address": "localhost:50051",
+  "securityMode": "insecure",
+  "sslRootCertPath": "./certs/ca.crt",
+  "customHeaderToken": "my-secret-token"
+}

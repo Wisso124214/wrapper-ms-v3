@@ -1,0 +1,30 @@
+// Ejemplo de uso de credenciales avanzadas para clientes (no para el server):
+// --- Base case ---
+// const stub = new Greeter('localhost:50051', grpc.credentials.createInsecure());
+
+// --- SSL/TLS ---
+// const root_cert = fs.readFileSync('path/to/root-cert');
+// const ssl_creds = grpc.credentials.createSsl(root_cert);
+// const stub = new Greeter('myservice.example.com', ssl_creds);
+
+// --- Google Auth ---
+// const GoogleAuth = require('google-auth-library');
+// const root_certs = fs.readFileSync('path/to/root-cert');
+// const ssl_creds = grpc.credentials.createSsl(root_certs);
+// (new GoogleAuth()).getApplicationDefault((err, auth) => {
+//   const call_creds = grpc.credentials.createFromGoogleCredential(auth);
+//   const combined_creds = grpc.credentials.combineChannelCredentials(ssl_creds, call_creds);
+//   const stub = new Greeter('greeter.googleapis.com', combined_creds);
+// });
+
+// --- Custom header ---
+// const rootCert = fs.readFileSync('path/to/root-cert');
+// const channelCreds = grpc.credentials.createSsl(rootCert);
+// const metaCallback = (_params, callback) => {
+//     const meta = new grpc.Metadata();
+//     meta.add('custom-auth-header', 'token');
+//     callback(null, meta);
+// }
+// const callCreds = grpc.credentials.createFromMetadataGenerator(metaCallback);
+// const combCreds = grpc.credentials.combineChannelCredentials(channelCreds, callCreds);
+// const stub = new Greeter('myservice.example.com', combCreds);
