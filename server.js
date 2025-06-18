@@ -1,26 +1,26 @@
-import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
-import * as fs from 'fs';
-import { GrpcServerWrapper } from './wrapper/wrp-server';
+const grpc = require('@grpc/grpc-js');
+const protoLoader = require('@grpc/proto-loader');
+const fs = require('fs');
+const { GrpcServerWrapper } = require('./wrapper/wrp-server');
 
 const config = JSON.parse(fs.readFileSync('./server-config.json', 'utf8'));
 const PROTO_PATH = __dirname + '/proto/greeter.proto';
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, { keepCase: true, longs: String, enums: String, defaults: true, oneofs: true });
-const proto: any = grpc.loadPackageDefinition(packageDefinition).greeter;
+const proto = grpc.loadPackageDefinition(packageDefinition).greeter;
 
-function sayHello(call: grpc.ServerUnaryCall<any, any>, callback: grpc.sendUnaryData<any>) {
+function sayHello(call, callback) {
   callback(null, { message: `Hola, ${call.request.name}!` });
 }
 
 // Middleware de ejemplo
-function loggingMiddleware(call: grpc.ServerUnaryCall<any, any>, callback: grpc.sendUnaryData<any>, next: Function) {
+function loggingMiddleware(call, callback, next) {
   console.log('Petición recibida:', call.request);
   next();
 }
 
 // Configuración de credenciales según el modo
-let credentials: grpc.ServerCredentials;
+let credentials;
 if (config.securityMode === 'ssl') {
   const rootCert = fs.readFileSync(config.sslRootCertPath);
   credentials = grpc.ServerCredentials.createSsl(rootCert, []);

@@ -1,16 +1,16 @@
-import * as grpc from '@grpc/grpc-js';
-import * as protoLoader from '@grpc/proto-loader';
-import * as fs from 'fs';
-import { GrpcClientWrapper } from './wrapper/wrp-client';
+const grpc = require('@grpc/grpc-js');
+const protoLoader = require('@grpc/proto-loader');
+const fs = require('fs');
+const { GrpcClientWrapper } = require('./wrapper/wrp-client');
 
 const config = JSON.parse(fs.readFileSync('./client-config.json', 'utf8'));
 const PROTO_PATH = __dirname + '/proto/greeter.proto';
 
 const packageDefinition = protoLoader.loadSync(PROTO_PATH, { keepCase: true, longs: String, enums: String, defaults: true, oneofs: true });
-const proto: any = grpc.loadPackageDefinition(packageDefinition).greeter;
+const proto = grpc.loadPackageDefinition(packageDefinition).greeter;
 
 async function main() {
-  let clientWrapper: GrpcClientWrapper;
+  let clientWrapper;
 
   if (config.securityMode === 'ssl') {
     clientWrapper = GrpcClientWrapper.createSsl(proto.Greeter, config.address, config.sslRootCertPath);
