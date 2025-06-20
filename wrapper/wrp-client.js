@@ -1,18 +1,23 @@
 const grpc = require('@grpc/grpc-js');
 const fs = require('fs');
+const protoLoader = require('@grpc/proto-loader');
 const { GoogleAuth } = require('google-auth-library');
+const { clientConfig } = require('../client-config.js');
 
 class GrpcClientWrapper {
-  constructor(Client, address, credentials, options = {
-    'grpc.max_receive_message_length': -1,
-    'grpc.max_send_message_length': -1
-  }) {
-    this.Client = Client;
-    this.address = address;
-    this.credentials = credentials;
-    this.options = options;
+  constructor() {
+    this.config = { ...clientConfig };
+
+    this.messageOptions = {
+      'grpc.max_receive_message_length': -1,
+      'grpc.max_send_message_length': -1
+    };
     this.client = null;
+    
+    this.packageDefinition = protoLoader.loadSync(this.config.protoPath, this.config.optionsProto);
+    this.loadedPackage = grpc.loadPackageDefinition(this.packageDefinition)[this.config.packageName];
   }
+
 
   static createInsecure(Client, address) {
     const creds = grpc.credentials.createInsecure();
@@ -62,10 +67,23 @@ class GrpcClientWrapper {
   }
 
   getClient() {
-    if (!this.client) {
-      this.client = new this.Client(this.address, this.credentials, this.options);
+    let clientWrapper;
+
+    if (this.config.securityMode === 'ssl') {
+      clientWrapper = this.createSsl(this.loadedPackage[this.config.serviceName], this.config.address, this.config.sslRootCertPath);
+    } else if (this.config.securityMode === 'customHeader') {
+      clientWrapper = this.createWithCustomHeader(
+        this.loadedPackage[this.config.serviceName],
+        this.config.address,
+        this.config.sslRootCertPath,
+        'custom-auth-header',
+        this.config.customHeaderToken
+      );
+    } else {
+      clientWrapper = this.createInsecure(this.loadedPackage[this.config.serviceName], this.config.address);
     }
-    return this.client;
+
+    return clientWrapper;
   }
 
   static sleep(ms) {

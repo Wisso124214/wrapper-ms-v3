@@ -1,0 +1,22 @@
+{
+  "name": "wrapper-ms-v3",
+  "version": "1.0.0",
+  "main": "client-config.js",
+  "type": "commonjs",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "start": "node server.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wisso124214/wrapper-ms-v3.git"
+  },
+  "keywords": [],
+  "author": "LBustos",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Wisso124214/wrapper-ms-v3/issues"
+  },
+  "homepage": "https://github.com/Wisso124214/wrapper-ms-v3#readme",
+  "description": ""
+}

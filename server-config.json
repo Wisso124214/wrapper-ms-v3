@@ -1,8 +1,0 @@
-{
-  "host": "0.0.0.0",
-  "port": 50051,
-  "securityMode": "ssl",
-  "sslRootCertPath": "./certs/localhost.crt",
-  "customHeaderToken": "my-secret-token",
-  "shutdownTimeoutMs": 600000
-}

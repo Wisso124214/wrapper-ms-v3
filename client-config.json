@@ -1,6 +1,0 @@
-{
-  "address": "localhost:50051",
-  "securityMode": "ssl",
-  "sslRootCertPath": "./certs/localhost.cert.pem",
-  "customHeaderToken": "my-secret-token"
-}
